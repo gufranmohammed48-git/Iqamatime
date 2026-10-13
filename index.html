@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Iqamah Times</title>
+  <meta name="description" content="Daily iqamah times for the masjid in Davie, FL">
+  <meta name="theme-color" content="#0f3d34">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Iqamah">
+  <style>
+    :root {
+      --bg: #f5f1e8;
+      --card: #ffffff;
+      --ink: #1d2a26;
+      --muted: #6b766f;
+      --line: #e6e0d2;
+      --brand: #0f3d34;
+      --brand-2: #16584b;
+      --gold: #c79a3e;
+      --gold-soft: #f3e7cb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1513; --card: #15211e; --ink: #eef2ee; --muted: #94a39b;
+        --line: #24332f; --gold-soft: #3a3220;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg); color: var(--ink); }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+    header {
+      background: linear-gradient(160deg, var(--brand) 0%, var(--brand-2) 100%);
+      color: #fff;
+      padding: calc(18px + env(safe-area-inset-top)) 20px 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::after {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(circle at 85% 10%, rgba(199,154,62,.28), transparent 45%);
+      pointer-events: none;
+    }
+    .masjid { font-size: 15px; letter-spacing: .04em; opacity: .9; font-weight: 600; }
+    .dates { font-size: 13px; opacity: .75; margin-top: 4px; }
+    .next-label { margin-top: 22px; font-size: 12px; text-transform: uppercase; letter-spacing: .14em; color: var(--gold); font-weight: 700; }
+    .next-name { font-size: 34px; font-weight: 700; margin-top: 4px; }
+    .next-time { font-size: 18px; opacity: .9; margin-top: 2px; }
+    .countdown { font-size: 44px; font-weight: 300; font-variant-numeric: tabular-nums; margin-top: 10px; letter-spacing: .02em; }
+    main { max-width: 520px; margin: -44px auto 0; padding: 0 16px; position: relative; z-index: 1; }
+    .card { background: var(--card); border-radius: 18px; box-shadow: 0 6px 24px rgba(15,61,52,.10); overflow: hidden; }
+    .card + .card, .section-title { margin-top: 18px; }
+    .row { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+    .row:last-child { border-bottom: 0; }
+    .row .name { font-size: 17px; font-weight: 600; }
+    .row .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .row .time { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .row.past .name, .row.past .time { color: var(--muted); font-weight: 500; }
+    .row.next { background: var(--gold-soft); }
+    .row.next .time { color: var(--gold); }
+    .row.next .name::after { content: "Next"; font-size: 11px; font-weight: 700; background: var(--gold); color: #fff; padding: 2px 7px; border-radius: 99px; margin-left: 8px; vertical-align: 3px; }
+    .section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); padding: 0 6px 8px; }
+    .week { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
+    .week th, .week td { padding: 11px 4px; text-align: center; border-bottom: 1px solid var(--line); }
+    .week th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; }
+    .week td:first-child, .week th:first-child { text-align: left; padding-left: 14px; font-weight: 600; }
+    .week tr:last-child td { border-bottom: 0; }
+    .week tr.today td { background: var(--gold-soft); }
+    .week tr.fri td:first-child { color: var(--gold); }
+    .note { font-size: 12px; color: var(--muted); text-align: center; margin: 18px 10px 0; line-height: 1.5; }
+    .install {
+      display: none; margin-top: 18px; padding: 14px 16px; border-radius: 14px;
+      background: var(--card); border: 1px dashed var(--gold); font-size: 14px; line-height: 1.45;
+    }
+    .install.show { display: block; }
+    /* ---------- settings ---------- */
+    .gear {
+      position: absolute; z-index: 2; top: calc(12px + env(safe-area-inset-top)); right: 12px;
+      width: 42px; height: 42px; border-radius: 50%; border: 0;
+      background: rgba(255,255,255,.14); color: #fff; display: grid; place-items: center; cursor: pointer;
+    }
+    .gear svg { width: 22px; height: 22px; }
+    .remind-line { font-size: 13px; opacity: .8; margin-top: 6px; min-height: 18px; }
+    .adhan-banner {
+      display: none; margin-top: 18px; padding: 16px; border-radius: 14px; text-align: center;
+      background: var(--brand); color: #fff; font-weight: 600;
+    }
+    .adhan-banner.show { display: block; }
+    .adhan-banner button { margin-top: 10px; padding: 12px 22px; border: 0; border-radius: 10px; background: var(--gold); color: #fff; font-size: 16px; font-weight: 700; }
+    .sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,.45); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 10; }
+    .sheet {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 11; max-height: 92vh; overflow-y: auto;
+      background: var(--bg); border-radius: 22px 22px 0 0; padding: 10px 18px calc(24px + env(safe-area-inset-bottom));
+      transform: translateY(105%); transition: transform .25s ease;
+    }
+    body.settings-open .sheet-bg { opacity: 1; pointer-events: auto; }
+    body.settings-open .sheet { transform: none; }
+    .sheet-inner { max-width: 520px; margin: 0 auto; }
+    .grab { width: 40px; height: 5px; border-radius: 3px; background: var(--line); margin: 0 auto 12px; }
+    .sheet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .sheet-head h2 { font-size: 22px; }
+    .done { border: 0; background: none; color: var(--brand-2); font-size: 17px; font-weight: 700; cursor: pointer; }
+    @media (prefers-color-scheme: dark) { .done { color: var(--gold); } }
+    .group { background: var(--card); border-radius: 14px; padding: 14px 16px; margin-top: 14px; }
+    .group h3 { font-size: 15px; margin-bottom: 4px; }
+    .group p { font-size: 13px; color: var(--muted); margin-bottom: 12px; line-height: 1.4; }
+    .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; background: var(--bg); padding: 4px; border-radius: 11px; }
+    .seg button { border: 0; background: none; padding: 10px 4px; border-radius: 8px; font-size: 15px; font-weight: 600; color: var(--ink); cursor: pointer; }
+    .seg button.on { background: var(--brand); color: #fff; }
+    .opt { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+    .opt:last-child { border-bottom: 0; }
+    .opt input { width: 20px; height: 20px; accent-color: var(--brand-2); flex: none; }
+    .opt b { display: block; font-size: 15px; }
+    .opt span { font-size: 12px; color: var(--muted); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { border: 1px solid var(--line); background: var(--bg); color: var(--ink); padding: 8px 14px; border-radius: 99px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .chip.on { background: var(--gold); border-color: var(--gold); color: #fff; }
+    .btn { width: 100%; padding: 13px; border: 0; border-radius: 11px; font-size: 15px; font-weight: 700; cursor: pointer; background: var(--brand); color: #fff; }
+    .btn.ghost { background: var(--bg); color: var(--ink); border: 1px solid var(--line); margin-top: 8px; }
+    .status { font-size: 13px; margin-top: 10px; color: var(--muted); line-height: 1.4; }
+    .status.ok { color: #2e7d5b; }
+    .install button {
+      margin-top: 10px; width: 100%; padding: 12px; font-size: 15px; font-weight: 700;
+      background: var(--brand); color: #fff; border: 0; border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="masjid" id="masjid"></div>
+    <div class="dates" id="dates"></div>
+    <div class="next-label">Next Iqamah</div>
+    <div class="next-name" id="nextName">—</div>
+    <div class="next-time" id="nextTime"></div>
+    <div class="countdown" id="countdown">--:--:--</div>
+    <div class="remind-line" id="remindLine"></div>
+    <button class="gear" id="openSettings" aria-label="Reminder settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+    </button>
+  </header>
+
+  <main>
+    <div class="adhan-banner" id="adhanBanner">
+      <div id="adhanText">Time for prayer</div>
+      <button id="playAdhanBtn">▶ Play Adhan</button>
+    </div>
+
+    <div class="card" id="today"></div>
+
+    <div class="install" id="install"></div>
+
+    <div class="section-title">Next 7 days</div>
+    <div class="card">
+      <table class="week" id="week"></table>
+    </div>
+
+    <p class="note">Iqamah times from the masjid's yearly schedule.<br>Daylight Saving changes are applied automatically.</p>
+  </main>
+
+  <!-- Reminder settings -->
+  <div class="sheet-bg" id="sheetBg"></div>
+  <div class="sheet" role="dialog" aria-label="Reminder settings">
+    <div class="sheet-inner">
+      <div class="grab"></div>
+      <div class="sheet-head"><h2>Reminders</h2><button class="done" id="closeSettings">Done</button></div>
+
+      <div class="group">
+        <h3>Remind me before iqamah</h3>
+        <p>Enough time to get ready and drive to the masjid.</p>
+        <div class="seg" id="leadSeg">
+          <button data-v="0">Off</button><button data-v="10">10 min</button><button data-v="20">20 min</button><button data-v="30">30 min</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3>How should I remind you?</h3>
+        <label class="opt"><input type="radio" name="mode" value="notify"><div><b>Notification only</b><span>A quiet alert on your phone</span></div></label>
+        <label class="opt"><input type="radio" name="mode" value="adhan"><div><b>Notification + Adhan</b><span>The adhan plays with the reminder</span></div></label>
+      </div>
+
+      <div class="group">
+        <h3>Which prayers?</h3>
+        <div class="chips" id="prayerChips"></div>
+      </div>
+
+      <div class="group">
+        <button class="btn" id="enableBtn">Turn on notifications</button>
+        <button class="btn ghost" id="testBtn">Test my reminder</button>
+        <div class="status" id="notifStatus"></div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="adhanAudio" src="adhan.mp3" preload="none"></audio>
+
+  <script src="schedule.js"></script>
+  <script src="app.js"></script>
+  <script src="settings.js"></script>
+</body>
+</html>
