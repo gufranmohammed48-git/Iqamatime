@@ -1,6 +1,6 @@
 // Bump VERSION whenever you change any file so phones get the update
-const VERSION = "iqamah-v2";
-const FILES = ["./", "index.html", "app.js", "schedule.js", "settings.js", "manifest.json",
+const VERSION = "iqamah-v3";
+const FILES = ["./", "index.html", "app.js", "schedule.js", "settings.js", "native.js", "manifest.json",
   "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 
 self.addEventListener("install", (e) => {
