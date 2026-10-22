@@ -1,0 +1,33 @@
+﻿{
+    "name":  "iqamatime",
+    "version":  "1.0.0",
+    "description":  "Prayer and iqama times display for the masjid.",
+    "main":  "app.js",
+    "scripts":  {
+                    "build":  "node scripts/build-www.js",
+                    "sync":  "node scripts/build-www.js \u0026\u0026 cap sync"
+                },
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/gufranmohammed48/Iqamatime.git"
+                   },
+    "keywords":  [
+
+                 ],
+    "author":  "",
+    "license":  "ISC",
+    "type":  "commonjs",
+    "bugs":  {
+                 "url":  "https://github.com/gufranmohammed48/Iqamatime/issues"
+             },
+    "homepage":  "https://github.com/gufranmohammed48/Iqamatime#readme",
+    "dependencies":  {
+                         "@capacitor/core":  "^8.5.3",
+                         "@capacitor/local-notifications":  "^8.3.1"
+                     },
+    "devDependencies":  {
+                            "@capacitor/android":  "^8.5.3",
+                            "@capacitor/cli":  "^8.5.3",
+                            "@capacitor/ios":  "^8.5.3"
+                        }
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Iqamah Times</string>
+    <string name="title_activity_main">Iqamah Times</string>
+    <string name="package_name">com.gufran.iqamatime</string>
+    <string name="custom_url_scheme">com.gufran.iqamatime</string>
+</resources>
