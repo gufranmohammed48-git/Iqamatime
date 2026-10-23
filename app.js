@@ -58,11 +58,15 @@ function renderStatic(now) {
   try {
     // Built from parts so the era shows as "AH" (Hijri), never "BC"/"BCE"
     const h = {};
-    new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
+    new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { day: "numeric", month: "numeric", year: "numeric", timeZone: "UTC" })
       .formatToParts(base).forEach((x) => (h[x.type] = x.value));
-    hijri = `${h.day} ${h.month} ${h.year} AH`;
+    const MONTHS = ["Muharram", "Safar", "Rabi al-Awwal", "Rabi al-Thani", "Jumada al-Ula", "Jumada al-Akhirah",
+      "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhul Qa'dah", "Dhul Hijjah"];
+    hijri = `${MONTHS[Number(h.month) - 1]} ${h.day}, ${h.year} AH`;
   } catch (e) {}
-  document.getElementById("dates").textContent = hijri ? `${greg} · ${hijri}` : greg;
+  // Line 1: Hijri date. Line 2: regular date.
+  document.getElementById("dates").innerHTML = hijri
+    ? `<div class="hijri">${hijri}</div><div>${greg}</div>` : greg;
 
   // Week table
   let html = "<tr><th>Day</th><th>Fajr</th><th>Zuhr</th><th>Asr</th><th>Magh</th><th>Isha</th></tr>";
