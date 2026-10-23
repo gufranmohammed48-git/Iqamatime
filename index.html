@@ -54,8 +54,9 @@
     .masjid { font-size: 15px; letter-spacing: .04em; opacity: .9; font-weight: 600; }
     .dates { font-size: 13px; opacity: .75; margin-top: 4px; }
     .next-label { margin-top: 22px; font-size: 12px; text-transform: uppercase; letter-spacing: .14em; color: var(--gold); font-weight: 700; }
-    .next-name { font-size: 34px; font-weight: 700; margin-top: 4px; }
-    .next-time { font-size: 18px; opacity: .9; margin-top: 2px; }
+    .next-line { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-top: 4px; }
+    .next-name { font-size: 34px; font-weight: 700; }
+    .next-time { font-size: 26px; font-weight: 600; color: var(--gold); }
     .countdown { font-size: 44px; font-weight: 300; font-variant-numeric: tabular-nums; margin-top: 10px; letter-spacing: .02em; }
     main { max-width: 520px; margin: -44px auto 0; padding: 0 16px; position: relative; z-index: 1; }
     .card { background: var(--card); border-radius: 18px; box-shadow: 0 6px 24px rgba(15,61,52,.10); overflow: hidden; }
@@ -140,8 +141,7 @@
     <div class="masjid" id="masjid"></div>
     <div class="dates" id="dates"></div>
     <div class="next-label">Next Iqamah</div>
-    <div class="next-name" id="nextName">—</div>
-    <div class="next-time" id="nextTime"></div>
+    <div class="next-line"><span class="next-name" id="nextName">—</span><span class="next-time" id="nextTime"></span></div>
     <div class="countdown" id="countdown">--:--:--</div>
     <div class="remind-line" id="remindLine"></div>
     <button class="gear" id="openSettings" aria-label="Reminder settings">

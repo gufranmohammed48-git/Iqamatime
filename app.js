@@ -56,7 +56,11 @@ function renderStatic(now) {
   const greg = base.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: "UTC" });
   let hijri = "";
   try {
-    hijri = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(base);
+    // Built from parts so the era shows as "AH" (Hijri), never "BC"/"BCE"
+    const h = {};
+    new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
+      .formatToParts(base).forEach((x) => (h[x.type] = x.value));
+    hijri = `${h.day} ${h.month} ${h.year} AH`;
   } catch (e) {}
   document.getElementById("dates").textContent = hijri ? `${greg} · ${hijri}` : greg;
 
