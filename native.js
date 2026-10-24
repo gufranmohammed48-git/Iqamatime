@@ -14,6 +14,7 @@
 
   const DAYS_AHEAD = 14;
   const CHANNEL = "iqamah-reminders";
+  const ADHAN_CHANNEL = "iqamah-reminders-adhan";
 
   // Epoch ms for a wall-clock time at the masjid (handles daylight saving)
   function masjidEpoch(y, m, d, mins) {
@@ -54,6 +55,10 @@
     if (!settings.lead || !(await permissionGranted())) return;
 
     try { await LN.createChannel({ id: CHANNEL, name: "Iqamah reminders", importance: 4, visibility: 1 }); } catch (e) {}
+    // Android fixes a notification's sound on its channel, so "+ Adhan" prayers use their own channel
+    try {
+      await LN.createChannel({ id: ADHAN_CHANNEL, name: "Iqamah reminders with adhan", importance: 4, visibility: 1, sound: "adhan_short.mp3" });
+    } catch (e) {}
 
     const now = masjidNow();
     const nowMs = Date.now();
@@ -69,7 +74,8 @@
           id: dayNum * 10 + idx,
           title: `${p.name} iqamah in ${settings.lead} min`,
           body: `Iqamah at ${fmt(p.mins)}. Time to head to the masjid.`,
-          channelId: CHANNEL,
+          channelId: settings.prayers[p.key] === "adhan" ? ADHAN_CHANNEL : CHANNEL,
+          sound: settings.prayers[p.key] === "adhan" ? "adhan_short.mp3" : undefined, // iOS reads it per notification
           schedule: { at: new Date(at), allowWhileIdle: true },
         });
       });
@@ -105,7 +111,9 @@
         LN.schedule({ notifications: [{
           id: 1, title: `Test: ${p.name} iqamah in ${lead} min`,
           body: `Iqamah at ${fmt(p.mins)}. Time to head to the masjid.`,
-          channelId: CHANNEL, schedule: { at: new Date(Date.now() + 2000) },
+          channelId: settings.prayers[p.key] === "adhan" ? ADHAN_CHANNEL : CHANNEL,
+          sound: settings.prayers[p.key] === "adhan" ? "adhan_short.mp3" : undefined,
+          schedule: { at: new Date(Date.now() + 2000) },
         }] }).catch(() => {});
       }
       return orig(p, lead, isTest);
