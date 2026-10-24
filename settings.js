@@ -68,6 +68,8 @@ function renderSettings() {
     `<div class="prow"><span class="pname">${PRAYER_LABELS[k]}</span>
       <div class="seg small" data-k="${k}">${[["off", "Off"], ["notify", "Reminder"], ["adhan", "+ Adhan"]].map(([v, t]) =>
         `<button data-v="${v}" class="${settings.prayers[k] === v ? "on" : ""}">${t}</button>`).join("")}</div></div>`).join("");
+  $("curMasjid").textContent = MASJID ? MASJID.name : "No masjid chosen";
+  $("curCity").textContent = MASJID ? [MASJID.city, MASJID.address !== MASJID.city ? MASJID.address : ""].filter(Boolean).join(" · ") : "";
   applyTheme();
   renderStatus();
   lastRemindLine = "";
@@ -99,6 +101,10 @@ function renderStatus() {
 
 $("openSettings").onclick = () => { renderSettings(); document.body.classList.add("settings-open"); };
 $("closeSettings").onclick = $("sheetBg").onclick = () => document.body.classList.remove("settings-open");
+$("changeMasjidBtn").onclick = () => {
+  document.body.classList.remove("settings-open");
+  if (window.openMasjidPicker) window.openMasjidPicker();
+};
 $("leadSeg").onclick = (e) => {
   const b = e.target.closest("button"); if (!b) return;
   if (b.dataset.v === "custom") {

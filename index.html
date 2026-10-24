@@ -142,6 +142,9 @@
     .done { border: 0; background: none; color: var(--brand-2); font-size: 17px; font-weight: 700; cursor: pointer; }
     @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .done { color: var(--gold); } }
     :root[data-theme="dark"] .done { color: var(--gold); }
+    .sheet-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 22px 4px -6px; }
+    .cur-masjid { font-size: 18px; font-weight: 700; }
+    .cur-city { font-size: 13px; color: var(--muted); margin: 2px 0 12px; }
     .group { background: var(--card); border-radius: 14px; padding: 14px 16px; margin-top: 14px; }
     .group h3 { font-size: 15px; margin-bottom: 4px; }
     .group p { font-size: 13px; color: var(--muted); margin-bottom: 12px; line-height: 1.4; }
@@ -183,8 +186,8 @@
     <div class="next-line"><span class="next-name" id="nextName">—</span><span class="next-time" id="nextTime"></span></div>
     <div class="countdown" id="countdown">--:--:--</div>
     <div class="remind-line" id="remindLine"></div>
-    <button class="gear" id="openSettings" aria-label="Reminder settings">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+    <button class="gear" id="openSettings" aria-label="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
   </header>
 
@@ -217,13 +220,21 @@
     </div>
   </div>
 
-  <!-- Reminder settings -->
+  <!-- Settings -->
   <div class="sheet-bg" id="sheetBg"></div>
-  <div class="sheet" role="dialog" aria-label="Reminder settings">
+  <div class="sheet" role="dialog" aria-label="Settings">
     <div class="sheet-inner">
       <div class="grab"></div>
-      <div class="sheet-head"><h2>Reminders</h2><button class="done" id="closeSettings">Done</button></div>
+      <div class="sheet-head"><h2>Settings</h2><button class="done" id="closeSettings">Done</button></div>
 
+      <div class="sheet-label">Masjid</div>
+      <div class="group">
+        <div class="cur-masjid" id="curMasjid"></div>
+        <div class="cur-city" id="curCity"></div>
+        <button class="btn" id="changeMasjidBtn">Change masjid</button>
+      </div>
+
+      <div class="sheet-label">Reminders</div>
       <div class="group">
         <h3>Remind me before iqamah</h3>
         <p>Minutes before iqamah. Enough time to get ready and get to the masjid.</p>
@@ -243,16 +254,16 @@
       </div>
 
       <div class="group">
-        <h3>Appearance</h3>
-        <div class="seg" id="themeSeg">
-          <button data-v="auto">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button>
-        </div>
-      </div>
-
-      <div class="group">
         <button class="btn" id="enableBtn">Turn on notifications</button>
         <button class="btn ghost" id="testBtn">Test my reminder</button>
         <div class="status" id="notifStatus"></div>
+      </div>
+
+      <div class="sheet-label">Appearance</div>
+      <div class="group">
+        <div class="seg" id="themeSeg">
+          <button data-v="auto">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button>
+        </div>
       </div>
     </div>
   </div>

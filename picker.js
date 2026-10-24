@@ -112,6 +112,7 @@
   $p("pickerClose").onclick = closePicker;
   $p("retryBtn").onclick = async () => { $p("pickerMsg").textContent = "Loading…"; await loadList(); };
   $p("masjid").onclick = openPicker;
+  window.openMasjidPicker = openPicker; // used by Settings → Change masjid
   $p("masjidList").onclick = async (e) => {
     const b = e.target.closest(".mrow"); if (!b) return;
     $p("pickerMsg").textContent = "Loading…";
