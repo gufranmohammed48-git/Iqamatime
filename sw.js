@@ -1,11 +1,11 @@
 // Bump VERSION whenever you change any file so phones get the update
-const VERSION = "iqamah-v9";
+const VERSION = "iqamah-v10";
 const FILES = ["./", "index.html", "app.js", "schedule.js", "settings.js", "native.js", "picker.js", "manifest.json", "masjids/index.json",
   "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(VERSION).then(async (c) => {
-    await c.addAll(FILES);
+    await c.addAll(FILES.map((f) => new Request(f, { cache: "reload" }))); // skip the browser's 10-minute HTTP cache
     try { await c.add("adhan.mp3"); } catch (err) {} // optional file
   }));
   self.skipWaiting();
@@ -19,7 +19,7 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET" || e.request.headers.has("range")) return;
   e.respondWith(
-    fetch(e.request).then((res) => {
+    fetch(e.request, { cache: "no-cache" }).then((res) => { // always revalidate, so files never mix versions
       if (res.ok && res.status === 200) {
         const copy = res.clone();
         caches.open(VERSION).then((c) => c.put(e.request, copy));
