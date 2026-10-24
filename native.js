@@ -62,7 +62,7 @@
       const day = addDays(now.y, now.m, now.d, i);
       const dayNum = day.y * 10000 + day.m * 100 + day.d;
       dayList(iqamahFor(day.y, day.m, day.d)).forEach((p, idx) => {
-        if (!settings.prayers[p.key]) return;
+        if (settings.prayers[p.key] === "off") return;
         const at = masjidEpoch(day.y, day.m, day.d, p.mins - settings.lead);
         if (at <= nowMs + 5000) return;
         list.push({

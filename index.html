@@ -13,6 +13,13 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Iqamah">
+  <script>
+    // Apply a saved Light/Dark choice before first paint (avoids a flash)
+    try {
+      const t = JSON.parse(localStorage.getItem("iqamahSettings")).theme;
+      if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  </script>
   <style>
     :root {
       --bg: #f5f1e8;
@@ -25,12 +32,22 @@
       --gold: #c79a3e;
       --gold-soft: #f3e7cb;
     }
+    /* Dark theme: follows the phone ("Auto") unless the user picks Light or Dark in settings */
     @media (prefers-color-scheme: dark) {
-      :root {
+      :root:not([data-theme="light"]) {
         --bg: #0d1513; --card: #15211e; --ink: #eef2ee; --muted: #94a39b;
-        --line: #24332f; --gold-soft: #3a3220;
+        --line: #2a3b36; --gold-soft: #3a3220; --brand: #0b2f28; --brand-2: #124a40; --gold: #d6aa4f;
       }
     }
+    :root[data-theme="dark"] {
+      --bg: #0d1513; --card: #15211e; --ink: #eef2ee; --muted: #94a39b;
+      --line: #2a3b36; --gold-soft: #3a3220; --brand: #0b2f28; --brand-2: #124a40; --gold: #d6aa4f;
+    }
+    :root { --on: #0f3d34; color-scheme: light dark; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --on: #1f6b5c; } }
+    :root[data-theme="dark"] { --on: #1f6b5c; }
+    :root[data-theme="light"] { color-scheme: light; }
+    :root[data-theme="dark"] { color-scheme: dark; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { background: var(--bg); color: var(--ink); }
     body {
@@ -112,13 +129,23 @@
     .sheet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .sheet-head h2 { font-size: 22px; }
     .done { border: 0; background: none; color: var(--brand-2); font-size: 17px; font-weight: 700; cursor: pointer; }
-    @media (prefers-color-scheme: dark) { .done { color: var(--gold); } }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .done { color: var(--gold); } }
+    :root[data-theme="dark"] .done { color: var(--gold); }
     .group { background: var(--card); border-radius: 14px; padding: 14px 16px; margin-top: 14px; }
     .group h3 { font-size: 15px; margin-bottom: 4px; }
     .group p { font-size: 13px; color: var(--muted); margin-bottom: 12px; line-height: 1.4; }
     .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; background: var(--bg); padding: 4px; border-radius: 11px; }
     .seg button { border: 0; background: none; padding: 10px 4px; border-radius: 8px; font-size: 15px; font-weight: 600; color: var(--ink); cursor: pointer; }
     .seg button.on { background: var(--brand); color: #fff; }
+    .seg.small button { font-size: 13px; padding: 9px 2px; }
+    .seg button { font-family: inherit; }
+    .seg button.on { color: #fff; background: var(--on); }
+    .custom-lead { display: none; align-items: center; gap: 10px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+    .custom-lead input { width: 84px; padding: 10px; font-size: 18px; font-weight: 700; text-align: center; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); }
+    .prow { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .prow:last-child { border-bottom: 0; }
+    .pname { font-size: 15px; font-weight: 600; flex: none; min-width: 66px; }
+    .prow .seg { flex: 1; max-width: 240px; }
     .opt { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
     .opt:last-child { border-bottom: 0; }
     .opt input { width: 20px; height: 20px; accent-color: var(--brand-2); flex: none; }
@@ -177,21 +204,27 @@
 
       <div class="group">
         <h3>Remind me before iqamah</h3>
-        <p>Enough time to get ready and drive to the masjid.</p>
+        <p>Minutes before iqamah. Enough time to get ready and get to the masjid.</p>
         <div class="seg" id="leadSeg">
-          <button data-v="0">Off</button><button data-v="10">10 min</button><button data-v="20">20 min</button><button data-v="30">30 min</button>
+          <button data-v="0">Off</button><button data-v="10">10</button><button data-v="20">20</button><button data-v="30">30</button><button data-v="custom">Custom</button>
+        </div>
+        <div class="custom-lead" id="customLead">
+          <input type="number" id="customMin" min="1" max="180" inputmode="numeric" aria-label="Custom reminder minutes">
+          <span>minutes before iqamah (1–180)</span>
         </div>
       </div>
 
       <div class="group">
-        <h3>How should I remind you?</h3>
-        <label class="opt"><input type="radio" name="mode" value="notify"><div><b>Notification only</b><span>A quiet alert on your phone</span></div></label>
-        <label class="opt"><input type="radio" name="mode" value="adhan"><div><b>Notification + Adhan</b><span>The adhan plays with the reminder</span></div></label>
+        <h3>For each prayer</h3>
+        <p><b>Reminder</b> is a notification. <b>+ Adhan</b> also plays the adhan.</p>
+        <div id="prayerRows"></div>
       </div>
 
       <div class="group">
-        <h3>Which prayers?</h3>
-        <div class="chips" id="prayerChips"></div>
+        <h3>Appearance</h3>
+        <div class="seg" id="themeSeg">
+          <button data-v="auto">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button>
+        </div>
       </div>
 
       <div class="group">
