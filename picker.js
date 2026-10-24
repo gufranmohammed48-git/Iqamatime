@@ -122,7 +122,7 @@
 
   // Pick up edited times when the app is reopened
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && MASJID) loadMasjid(MASJID.id);
+    if (!document.hidden && MASJID && MASJID.id) loadMasjid(MASJID.id);
   });
 
   /* ---------------- start ---------------- */
