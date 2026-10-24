@@ -81,7 +81,7 @@
     // text set via textContent so names can never inject markup
     $p("masjidList").querySelectorAll(".mrow").forEach((el, i) => {
       el.querySelector(".mname").textContent = rows[i].name;
-      el.querySelector(".mcity").textContent = [rows[i].city, rows[i].address && rows[i].address !== rows[i].city ? rows[i].address : ""].filter(Boolean).join(" · ");
+      el.querySelector(".mcity").textContent = rows[i].city; // address stays searchable but isn't shown
     });
     $p("pickerMsg").textContent = rows.length ? "" :
       (masjidList.length ? "No masjid matches that search." : "Couldn't load the masjid list. Check your connection and try again.");
