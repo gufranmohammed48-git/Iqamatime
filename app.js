@@ -50,7 +50,8 @@ function findNext(now) {
 }
 
 function renderStatic(now) {
-  document.getElementById("masjid").textContent = `${MASJID.name} · ${MASJID.city}`;
+  document.getElementById("masjid").textContent = `${MASJID.name} · ${MASJID.city}  ▾`;
+  document.getElementById("footNote").innerHTML = (MASJID.note || "").split("\n").map((l) => l.replace(/&/g, "&amp;").replace(/</g, "&lt;")).join("<br>");
 
   const base = new Date(Date.UTC(now.y, now.m - 1, now.d, 12));
   const greg = base.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: "UTC" });
@@ -98,6 +99,7 @@ function renderToday(now, next) {
 
 let lastDayKey = "", lastNextKey = "";
 function tick() {
+  if (!MASJID) return; // no masjid chosen yet (the picker is showing)
   const now = masjidNow();
   const next = findNext(now);
   const dayKey = `${now.y}-${now.m}-${now.d}`;

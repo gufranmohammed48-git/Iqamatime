@@ -1,4 +1,4 @@
-﻿# IqamaTime
+# IqamaTime
 
 Iqamah times for the masjid in Davie, FL. A vanilla-JS PWA wrapped with Capacitor for Android and iOS.
 

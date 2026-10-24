@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Iqamah Times</title>
-  <meta name="description" content="Daily iqamah times for the masjid in Davie, FL">
+  <meta name="description" content="Daily iqamah times for your masjid, with reminders">
   <meta name="theme-color" content="#0f3d34">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icons/icon-192.png">
@@ -68,7 +68,18 @@
       background: radial-gradient(circle at 85% 10%, rgba(199,154,62,.28), transparent 45%);
       pointer-events: none;
     }
-    .masjid { font-size: 15px; letter-spacing: .04em; opacity: .9; font-weight: 600; }
+    .masjid { font-size: 15px; letter-spacing: .04em; opacity: .9; font-weight: 600; cursor: pointer; padding: 0 44px; -webkit-tap-highlight-color: transparent; }
+    /* ---------- masjid picker ---------- */
+    .picker { position: fixed; inset: 0; z-index: 20; background: var(--bg); overflow-y: auto; padding: calc(16px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom)); }
+    .picker[hidden] { display: none; }
+    .picker-inner { max-width: 520px; margin: 0 auto; }
+    body.picker-open { overflow: hidden; }
+    #masjidSearch { width: 100%; margin: 10px 0 14px; padding: 14px 16px; font-size: 17px; font-family: inherit; border: 1px solid var(--line); border-radius: 14px; background: var(--card); color: var(--ink); }
+    #masjidSearch:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+    .mrow { display: block; width: 100%; text-align: left; font-family: inherit; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; }
+    .mrow.cur { border-color: var(--gold); background: var(--gold-soft); }
+    .mrow .mname { display: block; font-size: 17px; font-weight: 700; }
+    .mrow .mcity { display: block; font-size: 13px; color: var(--muted); margin-top: 3px; }
     .dates { font-size: 13px; opacity: .75; margin-top: 4px; line-height: 1.5; }
     .dates .hijri { font-size: 15px; font-weight: 600; opacity: 1; }
     .next-label { margin-top: 22px; font-size: 12px; text-transform: uppercase; letter-spacing: .14em; color: var(--gold); font-weight: 700; }
@@ -192,8 +203,19 @@
       <table class="week" id="week"></table>
     </div>
 
-    <p class="note">Iqamah times from the masjid's yearly schedule.<br>Daylight Saving changes are applied automatically.</p>
+    <p class="note" id="footNote"></p>
   </main>
+
+  <!-- Masjid picker -->
+  <div class="picker" id="picker" hidden>
+    <div class="picker-inner">
+      <div class="sheet-head"><h2>Choose your masjid</h2><button class="done" id="pickerClose">Cancel</button></div>
+      <input type="search" id="masjidSearch" placeholder="Search by name, city or address" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search masjids">
+      <div id="masjidList"></div>
+      <p class="status" id="pickerMsg"></p>
+      <button class="btn ghost" id="retryBtn" style="display:none">Try again</button>
+    </div>
+  </div>
 
   <!-- Reminder settings -->
   <div class="sheet-bg" id="sheetBg"></div>
@@ -241,5 +263,6 @@
   <script src="app.js"></script>
   <script src="settings.js"></script>
   <script src="native.js"></script>
+  <script src="picker.js"></script>
 </body>
 </html>

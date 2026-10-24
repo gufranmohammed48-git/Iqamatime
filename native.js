@@ -52,7 +52,7 @@
   async function doReschedule() {
     const pending = await LN.getPending();
     if (pending.notifications.length) await LN.cancel({ notifications: pending.notifications });
-    if (!settings.lead || !(await permissionGranted())) return;
+    if (!MASJID || !settings.lead || !(await permissionGranted())) return;
 
     try { await LN.createChannel({ id: CHANNEL, name: "Iqamah reminders", importance: 4, visibility: 1 }); } catch (e) {}
     // Android fixes a notification's sound on its channel, so "+ Adhan" prayers use their own channel
@@ -121,6 +121,7 @@
   })(window.fireReminder);
 
   window.onSettingsChanged = rescheduleAll;
+  window.onMasjidChanged = rescheduleAll;
   document.addEventListener("visibilitychange", () => { if (!document.hidden) rescheduleAll(); });
   window.renderStatus();
   rescheduleAll();
