@@ -1,4 +1,4 @@
-package com.gufran.iqamatime;
+package com.mohammed.iqamatime;
 
 import com.getcapacitor.BridgeActivity;
 
