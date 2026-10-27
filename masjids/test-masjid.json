@@ -1,0 +1,19 @@
+{
+  "id": "test-masjid",
+  "name": "Test Masjid",
+  "city": "Test City, FL",
+  "address": "Test City, FL",
+  "timeZone": "America/New_York",
+  "lat": 26.1,
+  "lon": -80.2,
+  "jumuah": "1:30 PM",
+  "note": "Sample times for testing the app only. Not a real masjid.\nMaghrib is 5 minutes after sunset.",
+  "updated": "2026-10-26",
+  "schedule": {
+    "fajr": "5:45 AM",
+    "zuhr": "1:15 PM",
+    "asr": "4:45 PM",
+    "maghrib": {"after": "sunset", "minutes": 5},
+    "isha": "8:15 PM"
+  }
+}

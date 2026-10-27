@@ -3,7 +3,7 @@
 Each masjid is one JSON file in this folder, plus one line in `index.json`.
 Push to GitHub and every phone picks it up the next time it opens the app. No app update needed.
 
-1. Copy `aliman-fort-lauderdale.json` (simple, fixed times) or `imof-davie.json` (changes through the year).
+1. Copy `test-masjid.json` (simple, fixed times) or `imof-davie.json` (changes through the year).
 2. Fill in `id` (lowercase, dashes, unique), `name`, `city`, `address`, `timeZone`, `lat`/`lon`, `jumuah`, `note`.
 3. Add the masjid to `index.json` (`aka` is an optional extra search name).
 

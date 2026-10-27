@@ -1,5 +1,5 @@
 // Bump VERSION whenever you change any file so phones get the update
-const VERSION = "iqamah-v16";
+const VERSION = "iqamah-v17";
 const FILES = ["./", "index.html", "app.js", "schedule.js", "settings.js", "native.js", "picker.js", "manifest.json", "masjids/index.json",
   "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 
